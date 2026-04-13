@@ -1,0 +1,151 @@
+---
+title: Instalar la toolchain
+description: Prepara tu entorno de desarrollo en Midnight para configurar herramientas, gestionar wallets y desplegar tu primera aplicación de conocimiento cero.
+sidebar_position: 10
+sidebar_label: Instalación
+tags: [getting-started, setup, development, builder, ZK]
+slug: /getting-started/installation
+toc_max_heading_level: 2
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import Step, { StepsProvider } from '@site/src/components/Step/Step';
+
+Esta guía cubre la instalación de las dependencias principales para desarrollar aplicaciones descentralizadas (DApps) en Midnight.
+
+## Prerrequisitos
+
+Antes de comenzar a desarrollar DApps en Midnight, asegúrate de tener:
+
+- Navegador Google Chrome
+- Visual Studio Code
+- Docker Desktop: [https://www.docker.com/products/docker-desktop/](https://www.docker.com/products/docker-desktop/)
+- Lace Wallet: [https://chromewebstore.google.com/detail/lace/gafhhkghbfjjkeiendhlofajokpaflmk](https://chromewebstore.google.com/detail/lace/gafhhkghbfjjkeiendhlofajokpaflmk)
+
+:::note
+Lace Midnight Wallet se encuentra en Beta. Para acceder a la wallet de Midnight, primero crea una wallet de Cardano, luego ve a configuración y habilita las funciones Beta. Después podrás añadir una nueva wallet y elegir la red Midnight.
+:::
+
+El desarrollo está soportado en Linux y Mac; Windows no está soportado actualmente.
+
+## Instalar Compact
+
+[Compact](https://github.com/midnightntwrk/compact) es el lenguaje de contratos inteligentes de Midnight para crear DApps, que permite a los desarrolladores controlar el nivel de protección de datos en sus aplicaciones.
+
+Utiliza el siguiente comando para instalar los binarios precompilados:
+
+```bash
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/midnightntwrk/compact/releases/latest/download/compact-installer.sh | sh
+
+Actualizar el PATH de tu shell
+
+El script de instalación añade automáticamente Compact al PATH de tu shell. Sin embargo, debes reiniciar la terminal o recargar la configuración del shell para que los cambios tengan efecto.
+
+Para recargar la configuración sin reiniciar, ejecuta:
+
+source ~/.zshrc # para zsh
+# o
+source ~/.bashrc # para bash
+
+Configuración manual del PATH (solo si es necesario): Si Compact no se encuentra después de reiniciar, añádelo manualmente al PATH:
+
+export PATH="$HOME/.compact/bin:$PATH"
+
+Luego recarga la configuración del shell como se mostró anteriormente.
+
+Actualizar la versión del compilador
+
+Actualiza a la última versión del compilador:
+
+compact update
+
+Este comando descarga la última versión del compilador de Compact y la establece como versión predeterminada.
+
+Verificar la instalación de Compact
+
+Ejecuta estos comandos para verificar la instalación:
+
+compact --version # muestra la versión de Compact
+compact compile --version # muestra la versión del compilador
+which compact     # muestra la ruta de instalación
+
+Verificación: Estos comandos devuelven el número de versión de Compact, la versión del compilador y la ruta de instalación.
+
+Configurar el servidor de pruebas
+
+El servidor de pruebas es necesario para generar pruebas de conocimiento cero de forma local. Esta sección explica cómo ejecutarlo.
+
+Docker Desktop
+
+El servidor de pruebas se ejecuta como un servicio en segundo plano utilizando Docker. Asegúrate de que el motor de Docker esté en ejecución para el siguiente paso.
+
+Ejecutar el servidor de pruebas
+
+Utiliza el siguiente comando para iniciar el servidor de pruebas en la terminal:
+
+docker run -p 6300:6300 midnightntwrk/proof-server:8.0.3 midnight-proof-server -v
+
+Este comando ocupa la ventana de la terminal mientras está en ejecución.
+
+Verificación: La terminal muestra logs indicando que el servidor está en ejecución y escuchando en http://localhost:6300.
+
+:::note
+Para usar un proof-server local con la Lace Midnight wallet, ve a Settings » Midnight y selecciona Local (http://localhost:6300).
+:::
+
+Instalar la extensión Compact para VS Code
+
+La extensión de Compact para VS Code proporciona resaltado de sintaxis y autocompletado de código. Para instalarla, sigue estos pasos:
+
+<StepsProvider>
+    <Step>Descarga el [paquete VSIX](https://raw.githubusercontent.com/midnight-ntwrk/releases/gh-pages/artifacts/vscode-extension/compact-0.2.13/compact-0.2.13.vsix).</Step>
+    <Step>En VS Code, ve a **Extensions**, luego **Install from VSIX** y selecciona el archivo de la extensión.</Step>
+</StepsProvider>
+
+
+Verificación: Ahora puedes ver la extensión Compact Language Support en tus extensiones instaladas de VS Code.
+
+Instalación completa
+
+Tu entorno de desarrollo ya está configurado. Estás listo para comenzar a construir e interactuar con aplicaciones que preservan la privacidad en Midnight.
+
+Para desplegar e interactuar con DApps de Midnight, se requiere tanto un nodo de Midnight como un indexador. Estos se proporcionan como endpoints RPC y pueden encontrarse en la Latest Stable Release￼. Los tutoriales siguientes mostrarán su uso; alternativamente, la sección de Examples￼ ofrece demostraciones completas de DApps.
+
+Resolución de problemas
+
+Esta sección cubre problemas comunes que pueden surgir durante la instalación y sus soluciones.
+
+Binario de Compact no encontrado
+
+Si ves este error:
+
+compact: command not found
+
+Significa que el binario de Compact no está en tu PATH. Sigue las instrucciones en Actualizar el PATH de tu shell￼ para añadirlo.
+
+Docker Desktop no está en ejecución
+
+Si encuentras errores de conexión al iniciar el servidor de pruebas, asegúrate de que Docker Desktop esté en ejecución:
+	1.	Abre la aplicación Docker Desktop.
+	2.	Espera a que el motor de Docker se inicie (el icono de Docker en la bandeja del sistema debe estar estable, no animado).
+	3.	Intenta ejecutar nuevamente el comando del servidor de pruebas.
+
+Puerto ya en uso
+
+Si ves un error indicando que el puerto 6300 ya está en uso:
+
+Error: bind: address already in use
+
+Detén el proceso que utiliza el puerto 6300 o ejecuta el servidor en otro puerto:
+
+docker run -p 6301:6300 midnightntwrk/proof-server:8.0.3 midnight-proof-server -v
+
+Recuerda actualizar la configuración de tu aplicación para usar el nuevo puerto.
+
+Siguientes pasos
+
+Ahora que tu entorno de desarrollo está listo, puedes:
+	•	Crear tu primer contrato en Midnight￼
+	•	Explorar el lenguaje Compact￼
+
