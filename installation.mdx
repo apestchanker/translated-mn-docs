@@ -127,7 +127,7 @@ Para desplegar e interactuar con DApps de Midnight, se requiere tanto un nodo de
 
 Esta sección cubre problemas comunes que pueden surgir durante la instalación y sus soluciones.
 
-## Binario de Compact no encontrado
+### Binario de Compact no encontrado
 
 Si ves este error:
 
@@ -137,22 +137,26 @@ compact: command not found
 
 Significa que el binario de Compact no está en tu PATH. Sigue las instrucciones en Actualizar el PATH de tu shell￼ para añadirlo.
 
-Docker Desktop no está en ejecución
+### Docker Desktop no está en ejecución
 
 Si encuentras errores de conexión al iniciar el servidor de pruebas (proofs), asegúrate de que Docker Desktop esté en ejecución:
 	1.	Abre la aplicación Docker Desktop.
 	2.	Espera a que el motor de Docker se inicie (el icono de Docker en la bandeja del sistema debe estar estable, no animado).
 	3.	Intenta ejecutar nuevamente el comando del servidor de pruebas.
 
-Puerto ya en uso
+### Puerto ya en uso
 
 Si ves un error indicando que el puerto 6300 ya está en uso:
 
+```bash
 Error: bind: address already in use
+```
 
 Detén el proceso que utiliza el puerto 6300 o ejecuta el servidor en otro puerto:
 
+```bash
 docker run -p 6301:6300 midnightntwrk/proof-server:8.0.3 midnight-proof-server -v
+```
 
 Recuerda actualizar la configuración de tu aplicación para usar el nuevo puerto.
 
