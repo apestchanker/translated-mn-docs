@@ -37,65 +37,75 @@ Utiliza el siguiente comando para instalar los binarios precompilados:
 
 ```bash
 curl --proto '=https' --tlsv1.2 -LsSf https://github.com/midnightntwrk/compact/releases/latest/download/compact-installer.sh | sh
-´´´
+```
 
-Actualizar el PATH de tu shell
+### Actualizar el PATH de tu shell
 
 El script de instalación añade automáticamente Compact al PATH de tu shell. Sin embargo, debes reiniciar la terminal o recargar la configuración del shell para que los cambios tengan efecto.
 
 Para recargar la configuración sin reiniciar, ejecuta:
 
+```bash
 source ~/.zshrc # para zsh
 # o
 source ~/.bashrc # para bash
+````
 
-Configuración manual del PATH (solo si es necesario): Si Compact no se encuentra después de reiniciar, añádelo manualmente al PATH:
+**Configuración manual del PATH** (solo si es necesario): Si Compact no se encuentra después de reiniciar, añádelo manualmente al PATH:
 
+```bash
 export PATH="$HOME/.compact/bin:$PATH"
+````
 
 Luego recarga la configuración del shell como se mostró anteriormente.
 
-Actualizar la versión del compilador
+### Actualizar la versión del compilador
 
 Actualiza a la última versión del compilador:
 
+```bash
 compact update
+````
 
 Este comando descarga la última versión del compilador de Compact y la establece como versión predeterminada.
 
-Verificar la instalación de Compact
+### Verificar la instalación de Compact
 
 Ejecuta estos comandos para verificar la instalación:
 
+```bash
 compact --version # muestra la versión de Compact
 compact compile --version # muestra la versión del compilador
 which compact     # muestra la ruta de instalación
+````
 
-Verificación: Estos comandos devuelven el número de versión de Compact, la versión del compilador y la ruta de instalación.
+**Verificación**: Estos comandos devuelven el número de versión de Compact, la versión del compilador y la ruta de instalación.
 
-Configurar el servidor de pruebas
+## Configurar el servidor de pruebas
 
 El servidor de pruebas es necesario para generar pruebas de conocimiento cero de forma local. Esta sección explica cómo ejecutarlo.
 
-Docker Desktop
+### Docker Desktop
 
 El servidor de pruebas (proofs) se ejecuta como un servicio en segundo plano utilizando Docker. Asegúrate de que el motor de Docker esté en ejecución para el siguiente paso.
 
-Ejecutar el servidor de pruebas (proofs)
+### Ejecutar el servidor de pruebas (proofs)
 
 Utiliza el siguiente comando para iniciar el servidor de pruebas (proofs) en la terminal:
 
+```bash
 docker run -p 6300:6300 midnightntwrk/proof-server:8.0.3 midnight-proof-server -v
+````
 
 Este comando ocupa la ventana de la terminal mientras está en ejecución.
 
-Verificación: La terminal muestra logs indicando que el servidor está en ejecución y escuchando en http://localhost:6300.
+**Verificación**: La terminal muestra logs indicando que el servidor está en ejecución y escuchando en http://localhost:6300.
 
 :::nota
 Para usar un proof-server local con Lace Midnight wallet, ve a Settings » Midnight y selecciona Local (http://localhost:6300).
 :::
 
-Instalar la extensión Compact para VS Code
+## Instalar la extensión Compact para VS Code
 
 La extensión de Compact para VS Code proporciona resaltado de sintaxis y autocompletado de código. Para instalarla, sigue estos pasos:
 
@@ -105,23 +115,25 @@ La extensión de Compact para VS Code proporciona resaltado de sintaxis y autoco
 </StepsProvider>
 
 
-Verificación: Ahora puedes ver la extensión Compact Language Support en tus extensiones instaladas de VS Code.
+**Verificación**: Ahora puedes ver la extensión Compact Language Support en tus extensiones instaladas de VS Code.
 
-Instalación completa
+## Instalación completa
 
 Tu entorno de desarrollo ya está configurado. Estás listo para comenzar a construir e interactuar con aplicaciones que preservan la privacidad en Midnight.
 
 Para desplegar e interactuar con DApps de Midnight, se requiere tanto un nodo de Midnight como un indexador. Estos se proporcionan como endpoints RPC y pueden encontrarse en la última Stable Release￼. Los tutoriales siguientes mostrarán su uso; alternativamente, la sección de Ejemplos ofrece demostraciones completas de DApps.
 
-Resolución de problemas
+## Resolución de problemas
 
 Esta sección cubre problemas comunes que pueden surgir durante la instalación y sus soluciones.
 
-Binario de Compact no encontrado
+## Binario de Compact no encontrado
 
 Si ves este error:
 
+```bash
 compact: command not found
+```
 
 Significa que el binario de Compact no está en tu PATH. Sigue las instrucciones en Actualizar el PATH de tu shell￼ para añadirlo.
 
