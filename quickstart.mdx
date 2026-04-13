@@ -1,0 +1,231 @@
+---
+title: Crear una DApp de Midnight
+description: Comienza a crear una DApp de Midnight utilizando la herramienta CLI create-mn-app.
+sidebar_position: 15
+sidebar_label: Inicio rápido
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import Step, { StepsProvider } from "@site/src/components/Step/Step";
+
+# Crear una DApp de Midnight
+
+Esta guía explica cómo generar la estructura de una DApp de Midnight utilizando la herramienta CLI `create-mn-app`.
+
+## Pre-requisitos
+
+Se requieren las siguientes herramientas para ejecutar una DApp de Midnight:
+
+- Compilador Compact instalado. Consulta [install the toolchain](./installation) para ver las instrucciones.
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado y en ejecución.
+- [Node.js](https://nodejs.org/) versión 22+ instalado. Puedes usar [NVM](https://github.com/nvm-sh/nvm) para instalar Node.js.
+
+## Herramienta CLI de Midnight
+
+La herramienta CLI [`create-mn-app`](https://www.npmjs.com/package/create-mn-app) proporciona plantillas iniciales para DApps de Midnight. Incluye una configuración predefinida en TypeScript, recarga en caliente y lógica para operar con wallets. 
+
+Para generar una nueva DApp, ejecuta el siguiente comando:
+
+```bash
+npx create-mn-app [project-name]
+```
+
+:::info
+Asegúrate de reemplazar `[project-name]` por el nombre de tu nueva DApp.
+:::
+
+La herramienta CLI primero te solicita elegir el tipo de proyecto que deseas crear:
+
+- Contract
+- Full DApp
+
+Si eres nuevo en el desarrollo con Midnight, se recomienda comenzar con _contract_. Proporciona una configuración mínima centrada en compilar y desplegar un contrato inteligente en Compact antes de trabajar con la estructura completa de una aplicación.
+
+#### Contract
+
+Seleccionar **Contract** genera un proyecto mínimo para desplegar un contrato inteligente en Compact.
+
+Se te solicitará elegir una plantilla de contrato. Actualmente, la opción disponible es:
+
+- Hello world
+
+El contrato Hello world es un ejemplo básico que demuestra cómo desplegar un contrato en Compact e interactuar con él desde la CLI.
+
+#### Full DApp
+
+Seleccionar **Full DApp** genera una aplicación descentralizada completa con lógica de contrato, scripts de despliegue y una CLI para interactuar con el contrato.
+
+Se te solicitará elegir una plantilla de DApp. Las opciones disponibles incluyen:
+
+- Counter  
+- Bulletin board
+
+La plantilla Counter es un ejemplo que demuestra cómo mantener y actualizar un estado compartido del contrato incrementando o decrementando un contador.
+
+La plantilla Bulletin board es un tablón de mensajes que preserva la privacidad y permite a los usuarios publicar y eliminar mensajes utilizando pruebas de conocimiento cero (ZK).
+
+Para esta guía, selecciona **Contract** en el primer prompt y luego elige **Hello world** en el prompt de selección de plantilla. Sigue los prompts restantes para completar la configuración.
+
+Si seleccionas **Full DApp**, consulta los tutoriales específicos para cada plantilla:
+
+- [Counter DApp](../examples/dapps/counter)
+- [Bulletin board DApp](../examples/dapps/bboard)
+
+```
+Creating a new Midnight app in /path/to/my-app.
+
+Template: hello-world
+
+✔ Project structure created
+✔ Dependencies installed
+✔ Git repository initialized
+✔ Docker is ready for proof server
+✔ Contract compiled successfully
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎉 Success! Your Midnight app is ready.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+Una vez completada la instalación, navega al directorio `my-app`:
+
+```bash
+cd my-app
+```
+
+La estructura de tu proyecto debería verse similar a esta:
+
+```
+my-app/
+├── contracts/
+│   └── hello-world.compact    # Contrato inteligente en Compact
+├── src/
+│   ├── cli.ts                 # Interactuar con el contrato desplegado
+│   ├── deploy.ts              # Desplegar contrato en Preprod
+│   └── check-balance.ts       # Comprobar saldo de la wallet
+├── docker-compose.yml         # Configuración del proof server
+├── package.json
+└── deployment.json            # Información de despliegue (contiene la semilla de la wallet y la dirección del contrato)
+```
+
+El archivo `contracts/hello-world.compact` contiene el código del contrato inteligente en Compact.
+
+```compact
+pragma language_version 0.22;
+
+export ledger message: Opaque<"string">;
+
+export circuit storeMessage(newMessage: Opaque<"string">): [] {
+  message = disclose(newMessage);
+}
+```
+
+[Compact](../compact/) es el lenguaje de contratos inteligentes de Midnight utilizado para definir la lógica del contrato. Es similar a TypeScript, pero está diseñado para su uso con el runtime de Midnight.
+
+El archivo `docker-compose.yml` contiene la configuración del [proof server](../guides/run-proof-server). El proof server genera pruebas de conocimiento cero (ZK) para contratos inteligentes en la red Midnight. Debe estar en ejecución antes de que puedas desplegar o interactuar con el contrato.
+
+## Configurar el proyecto
+
+Ejecuta el script para configurar el proyecto:
+
+```bash
+npm run setup
+```
+
+Este script inicia el proof server, compila el contrato y despliega el contrato en la red Preprod.
+
+La CLI te solicita crear una nueva wallet o restaurar una wallet existente. Si eliges crear una nueva wallet, la CLI genera una nueva semilla de wallet y muestra la dirección de la wallet. Guarda la semilla de la wallet en un lugar seguro. La necesitarás para restaurar tu wallet.
+
+:::note
+Necesitarás fondear tu wallet con tokens tNIGHT desde el [Preprod faucet](https://faucet.preprod.midnight.network/). tNIGHT se utiliza para generar tDUST, que es necesario para pagar las comisiones de transacción en la blockchain de Midnight.
+:::
+
+Después de fondear tu wallet, la CLI genera automáticamente tDUST y despliega el contrato en la red Preprod. Este proceso tarda unos segundos en completarse.
+
+Deberías ver la siguiente salida una vez que el despliegue se haya completado:
+
+```
+  ✅ Contract deployed successfully!
+
+  Contract Address: b92d63e566cbcede6............
+
+  Saved to deployment.json
+```
+
+El archivo `deployment.json` en el directorio raíz contiene la información de despliegue del contrato. La CLI consulta este archivo al interactuar con el contrato.
+
+## Interactuar con el contrato
+
+La herramienta proporciona una interfaz de línea de comandos para interactuar con el contrato. Ejecuta el siguiente comando para iniciar la CLI:
+
+```bash
+npm run cli
+```
+
+Este comando inicia la CLI y te solicita que introduzcas la semilla de tu wallet. Después de sincronizar tu wallet con la red, puedes interactuar con el contrato utilizando los siguientes comandos:
+
+```
+1. Store a message
+2. Read current message
+3. Check wallet balance
+4. Exit
+```
+
+Elige una opción del menú y sigue los prompts para interactuar con el contrato.
+
+## Templates
+
+La herramienta CLI de Midnight proporciona plantillas iniciales para las siguientes DApps:
+
+### Hello world
+
+La plantilla Hello world es una DApp de almacenamiento de mensajes que te permite publicar y recuperar mensajes en la blockchain.
+
+```bash
+npx create-mn-app my-app
+```
+
+La plantilla Hello world es la predeterminada y viene con las dependencias instaladas. No necesitas usar la opción `--template` al crear una nueva DApp Hello world.
+
+### Counter
+
+La plantilla Counter es una DApp sencilla de contador que te permite incrementar y decrementar un contador.
+
+```bash
+npx create-mn-app my-app --template counter
+cd my-app
+npm install
+```
+
+Para saber más sobre la plantilla Counter, consulta el ejemplo de [Counter DApp](../examples/dapps/counter).
+
+### Bulletin board
+
+La plantilla Bulletin board es una DApp de tablón de anuncios que preserva la privacidad y te permite publicar y eliminar mensajes.
+
+```bash
+npx create-mn-app my-app --template bboard
+cd my-app
+npm install
+```
+
+Esta plantilla utiliza pruebas ZK para verificar la identidad de quien publica y de la persona propietaria del mensaje sin revelar su identidad en cadena. Para saber más sobre la DApp Bulletin board, consulta el ejemplo de [Bulletin board DApp](../examples/dapps/bboard).
+
+## Opciones de la CLI
+
+Las siguientes opciones están disponibles al crear una nueva DApp utilizando la herramienta CLI `create-mn-app`:
+
+| Option | Description |
+|--------|-------------|
+| `-t`, `--template <name>` | Selecciona una plantilla: `hello-world`, `counter`, `bboard` |
+| `--use-npm/yarn/pnpm/bun` | Fuerza el uso de un gestor de paquetes específico |
+| `--skip-install` | Omite la instalación de dependencias |
+| `--skip-git` | Omite la inicialización de un repositorio git |
+| `--verbose` | Muestra una salida detallada al crear el proyecto |
+| `-h`, `--help` | Muestra la ayuda |
+| `-V`, `--version` | Muestra la versión de la herramienta CLI |
+
+## Siguientes pasos
+
+Ahora ya sabes cómo generar la estructura de una nueva DApp utilizando la herramienta CLI de Midnight. Consulta el [hello world tutorial](./hello-world) para aprender a escribir tu primer contrato de Midnight utilizando el lenguaje Compact.
